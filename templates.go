@@ -21,14 +21,19 @@ SUMMARY:{{.Summary}}
 DESCRIPTION:{{.Description}}
 CLASS:{{.Class}}
 UID:{{.UID}}
+LAST-MODIFIED:{{.LastModified}}
+SEQUENCE:{{.Sequence}}
+CREATED:{{.Created}}
 STATUS:{{.Status}}
 END:VEVENT`
 
 type vEvent struct {
 	*Event
-	DtStamp     string
-	DtEnd       string
-	DtStart     string
-	ExDate      []string
-	Description string
+	DtStamp      string
+	DtEnd        string
+	DtStart      string
+	Created      string
+	LastModified string
+	ExDate       []string
+	Description  string
 }

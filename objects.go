@@ -21,7 +21,22 @@ type Event struct {
 	Organizer    Attendee
 	UID          string
 
-	dtStamp string
+	// This property defines the revision sequence number of the calendar component within a sequence of revisions.
+	// https://www.kanzaki.com/docs/ical/sequence.html
+	Sequence int
+	// The property indicates the date/time that the instance of the iCalendar object was created.
+	// https://www.kanzaki.com/docs/ical/dtstamp.html
+	DtStamp time.Time
+	// This property specifies the date and time that the calendar information was created by
+	// the calendar user agent in the calendar store. Note: This is analogous to the creation
+	// date and time for a file in the file system.
+	// https://www.kanzaki.com/docs/ical/created.html
+	Created time.Time
+	// This property specifies the date and time that the calendar information was last
+	// modified by the calendar user agent in the calendar store. Note: This is analogous to
+	// the modification date and time for a file in the file system.
+	// https://www.kanzaki.com/docs/ical/lastModified.html
+	LastModified time.Time
 }
 
 type EventStatus string

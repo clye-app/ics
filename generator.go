@@ -27,19 +27,7 @@ func Generate(prodId string, events ...*Event) (string, error) {
 			}
 		}
 
-		e := &vEvent{
-			Event:       event,
-			DtStamp:     FormatDateTime(time.Now()),
-			DtEnd:       FormatDateTime(event.DtEnd),
-			DtStart:     FormatDateTime(event.DtStart),
-			ExDate:      make([]string, len(event.ExDate)),
-			Description: strings.Join(strings.Split(event.Description, "\n"), `\n`),
-		}
-		for i, exd := range event.ExDate {
-			e.ExDate[i] = FormatDateTime(exd)
-		}
-		event.dtStamp = e.DtStamp
-		event.UID = hex.EncodeToString([]byte(e.UID))
+		e := prepareEvent(event)
 
 		buf := &bytes.Buffer{}
 		if err := eventTmpl.Execute(buf, e); err != nil {
@@ -73,19 +61,7 @@ func (event *Event) Generate(prodId string) (string, error) {
 		}
 	}
 
-	e := &vEvent{
-		Event:       event,
-		DtStamp:     FormatDateTime(time.Now()),
-		DtEnd:       FormatDateTime(event.DtEnd),
-		DtStart:     FormatDateTime(event.DtStart),
-		ExDate:      make([]string, len(event.ExDate)),
-		Description: strings.Join(strings.Split(event.Description, "\n"), `\n`),
-	}
-	for i, exd := range event.ExDate {
-		e.ExDate[i] = FormatDateTime(exd)
-	}
-	event.dtStamp = e.DtStamp
-	event.UID = hex.EncodeToString([]byte(e.UID))
+	e := prepareEvent(event)
 
 	eventTmpl, err := template.New("events").Parse(vevent)
 	if err != nil {
@@ -110,12 +86,34 @@ func (event *Event) Generate(prodId string) (string, error) {
 	return buf.String(), nil
 }
 
+func prepareEvent(event *Event) *vEvent {
+	e := &vEvent{
+		Event:        event,
+		DtStamp:      FormatDateTime(event.DtStamp, event.DtStamp),
+		DtEnd:        FormatDateTime(event.DtEnd, event.DtStamp),
+		DtStart:      FormatDateTime(event.DtStart, event.DtStamp),
+		ExDate:       make([]string, len(event.ExDate)),
+		Created:      FormatDateTime(event.Created, event.DtStamp),
+		LastModified: FormatDateTime(event.LastModified, event.DtStamp),
+		Description:  strings.Join(strings.Split(event.Description, "\n"), `\n`),
+	}
+	for i, exd := range event.ExDate {
+		e.ExDate[i] = FormatDateTime(exd, event.DtStamp)
+	}
+	event.UID = hex.EncodeToString([]byte(e.UID))
+	return e
+}
+
 type generator struct {
 	ProdId string
 	Events []string
 }
 
-func FormatDateTime(t time.Time) string {
+func FormatDateTime(t time.Time, now time.Time) string {
+	// default to now if not specified
+	if t == (time.Time{}) {
+		t = now
+	}
 	dt := strconv.Itoa(t.Year())
 
 	month := strconv.Itoa(int(t.Month()))

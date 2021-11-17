@@ -9,7 +9,7 @@ func Test_formatDateTime(t *testing.T) {
 	t.Run("double digits", func(t *testing.T) {
 		date := time.Date(2019, time.December, 12, 12, 12, 12, 0, time.UTC)
 
-		dateString := FormatDateTime(date)
+		dateString := FormatDateTime(date, time.Now())
 		expectedDateString := "20191212T121212Z"
 
 		if dateString != expectedDateString {
@@ -20,7 +20,7 @@ func Test_formatDateTime(t *testing.T) {
 	t.Run("single digits", func(t *testing.T) {
 		date := time.Date(2019, time.January, 1, 9, 0, 0, 0, time.UTC)
 
-		dateString := FormatDateTime(date)
+		dateString := FormatDateTime(date, time.Now())
 		expectedDateString := "20190101T090000Z"
 
 		if dateString != expectedDateString {
@@ -67,21 +67,23 @@ BEGIN:VEVENT
 ORGANIZER;CN="My Calendar":mailto:my@calendar.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN="John Wick";RSVP=FALSE:mailto:john.wick@gmail.com
 LOCATION:location
-DTSTAMP:` + event.dtStamp + `
+DTSTAMP:10101T000000Z
 DTSTART:20190101T090000Z
 DTEND:20190101T093000Z
 SUMMARY:Event Name
 DESCRIPTION:Event Description
 CLASS:PUBLIC
 UID:313233313233313233
+LAST-MODIFIED:10101T000000Z
+SEQUENCE:0
+CREATED:10101T000000Z
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`
 
 	if gotIcs != expectedIcs {
-		t.Errorf("Generate() = %v, want %v", gotIcs, expectedIcs)
+		t.Errorf("Generate() = %v,\n\n#####want\n\n %v", gotIcs, expectedIcs)
 	}
-
 }
 
 func TestGenerateWithRecurrence(t *testing.T) {
@@ -128,7 +130,7 @@ BEGIN:VEVENT
 ORGANIZER;CN="My Calendar":mailto:my@calendar.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN="John Wick";RSVP=FALSE:mailto:john.wick@gmail.com
 LOCATION:location
-DTSTAMP:` + event.dtStamp + `
+DTSTAMP:10101T000000Z
 DTSTART:20190101T090000Z
 DTEND:20190101T093000Z
 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR
@@ -137,12 +139,15 @@ SUMMARY:Event Name
 DESCRIPTION:Event Description
 CLASS:PUBLIC
 UID:313233313233313233
+LAST-MODIFIED:10101T000000Z
+SEQUENCE:0
+CREATED:10101T000000Z
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`
 
 	if gotIcs != expectedIcs {
-		t.Errorf("Generate() = %v, want %v", gotIcs, expectedIcs)
+		t.Errorf("Generate() = \n%v", gotIcs)
 	}
 
 }
@@ -195,7 +200,7 @@ BEGIN:VEVENT
 ORGANIZER;CN="My Calendar":mailto:my@calendar.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN="John Wick";RSVP=FALSE:mailto:john.wick@gmail.com
 LOCATION:location
-DTSTAMP:` + event.dtStamp + `
+DTSTAMP:10101T000000Z
 DTSTART:20190101T090000Z
 DTEND:20190101T093000Z
 RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR
@@ -206,12 +211,15 @@ SUMMARY:Event Name
 DESCRIPTION:Event Description
 CLASS:PUBLIC
 UID:313233313233313233
+LAST-MODIFIED:10101T000000Z
+SEQUENCE:0
+CREATED:10101T000000Z
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`
 
 	if gotIcs != expectedIcs {
-		t.Errorf("Generate() = %v, want %v", gotIcs, expectedIcs)
+		t.Errorf("Generate() = \n%v", gotIcs)
 	}
 
 }
@@ -254,19 +262,22 @@ BEGIN:VEVENT
 ORGANIZER;CN="My Calendar":mailto:my@calendar.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN="John Wick";RSVP=FALSE:mailto:john.wick@gmail.com
 LOCATION:location
-DTSTAMP:` + event.dtStamp + `
+DTSTAMP:10101T000000Z
 DTSTART:20190101T090000Z
 DTEND:20190101T093000Z
 SUMMARY:Event Name
 DESCRIPTION:Event Description
 CLASS:PUBLIC
 UID:313233313233313233
+LAST-MODIFIED:10101T000000Z
+SEQUENCE:0
+CREATED:10101T000000Z
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`
 
 	if gotIcs != expectedIcs {
-		t.Errorf("Generate() = %v, want %v", gotIcs, expectedIcs)
+		t.Errorf("Generate() = \n%v", gotIcs)
 	}
 }
 
@@ -309,19 +320,21 @@ BEGIN:VEVENT
 ORGANIZER;CN="My Calendar":mailto:my@calendar.com
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN="John Wick";RSVP=TRUE:mailto:john.wick@gmail.com
 LOCATION:location
-DTSTAMP:` + event.dtStamp + `
+DTSTAMP:10101T000000Z
 DTSTART:20190101T090000Z
 DTEND:20190101T093000Z
 SUMMARY:Event Name
 DESCRIPTION:Event Description
 CLASS:PUBLIC
 UID:313233313233313233
+LAST-MODIFIED:10101T000000Z
+SEQUENCE:0
+CREATED:10101T000000Z
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`
 
 	if gotIcs != expectedIcs {
-		t.Errorf("Generate() = %v, want %v", gotIcs, expectedIcs)
+		t.Errorf("Generate() = \n%v", gotIcs)
 	}
-
 }
